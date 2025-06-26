@@ -1,11 +1,125 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; URL=https://www.notion.so/21b7b882b50580aa86a1c2fa244caa61?source=copy_link">
-  <title>ジャンプ中...</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="refresh" content="3; URL=https://www.notion.so/21b7b882b50580aa86a1c2fa244caa61?source=copy_link" />
+  <title>ご案内中...</title>
+  <style>
+    body {
+      background: #f5f6fa;
+      font-family: sans-serif;
+      text-align: center;
+      padding-top: 20vh;
+      margin: 0;
+    }
+
+    .loader-container {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .progress-ring {
+      transform: rotate(-90deg);
+    }
+
+    .label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    p {
+      font-size: 16px;
+      margin-top: 30px;
+      padding: 0 20px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .loader-container {
+        width: 80px;
+        height: 80px;
+      }
+
+      .label {
+        font-size: 14px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+    }
+
+    #progress {
+      stroke: url(#gradient);
+    }
+  </style>
 </head>
 <body>
-  <p>ジャンプ中です。自動で遷移しない場合は <a href="https://www.notion.so/21b7b882b50580aa86a1c2fa244caa61?source=copy_link">こちら</a> をクリックしてください。</p>
+  <div class="loader-container">
+    <svg class="progress-ring">
+      <defs>
+        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#4facfe" />
+          <stop offset="100%" stop-color="#00f2fe" />
+        </linearGradient>
+      </defs>
+      <circle
+        stroke="#eee"
+        stroke-width="10"
+        fill="transparent"
+        r="50"
+        cx="60"
+        cy="60"
+      />
+      <circle
+        id="progress"
+        stroke-width="10"
+        fill="transparent"
+        r="50"
+        cx="60"
+        cy="60"
+        stroke-dasharray="314"
+        stroke-dashoffset="314"
+      />
+    </svg>
+    <div class="label" id="percent">0%</div>
+  </div>
+  <p>
+    「ただいまリンク先にご案内中です」<br />
+    自動で遷移しない場合は  
+    <a href="https://www.notion.so/21b7b882b50580aa86a1c2fa244caa61?source=copy_link">こちら</a> をクリックしてください。
+  </p>
+
+  <script>
+    const circle = document.getElementById("progress");
+    const percentLabel = document.getElementById("percent");
+    const total = 314; // 2πr
+    let percent = 0;
+    let offset = total;
+    let step = 0.5;
+    const interval = setInterval(() => {
+      percent += step;
+      if (percent >= 100) {
+        percent = 100;
+        clearInterval(interval);
+      }
+      offset = total - (total * percent) / 100;
+      circle.setAttribute("stroke-dashoffset", offset);
+      percentLabel.textContent = Math.round(percent) + "%";
+      if (step < 5) step += 0.1;
+    }, 30);
+  </script>
 </body>
 </html>
