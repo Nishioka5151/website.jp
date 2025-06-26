@@ -3,122 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="refresh" content="3; URL=https://www.notion.so/21b7b882b50580aa86a1c2fa244caa61?source=copy_link" />
+  <meta http-equiv="refresh" content="4; URL=https://example.com/" /> <!-- 遷移先URL -->
   <title>ご案内中...</title>
   <style>
-    body {
-      background: #f5f6fa;
-      font-family: sans-serif;
-      text-align: center;
-      padding-top: 20vh;
+    html, body {
       margin: 0;
-    }
-
-    .loader-container {
-      width: 120px;
-      height: 120px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    svg {
-      width: 100%;
+      padding: 0;
+      background: black;
+      color: white;
+      font-family: 'Helvetica Neue', sans-serif;
       height: 100%;
+      overflow: hidden;
     }
-
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      position: relative;
+      transition: opacity 1.5s ease;
+    }
+    .fade-out {
+      opacity: 0;
+    }
+    .circle {
+      width: 280px;
+      height: 280px;
+      position: absolute;
+      transition: all 1s ease;
+    }
     .progress-ring {
       transform: rotate(-90deg);
     }
-
-    .label {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 18px;
-      font-weight: bold;
+    svg {
+      width: 280px;
+      height: 280px;
     }
-
-    p {
-      font-size: 16px;
-      margin-top: 30px;
-      padding: 0 20px;
-      line-height: 1.6;
+    .logo {
+      z-index: 2;
+      text-align: center;
+      font-size: 0.9em;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 1s ease;
     }
-
-    @media (max-width: 600px) {
-      .loader-container {
-        width: 80px;
-        height: 80px;
-      }
-
-      .label {
-        font-size: 14px;
-      }
-
-      p {
-        font-size: 14px;
-      }
+    .animate .logo {
+      opacity: 1;
+      transform: scale(1.4);
     }
-
-    #progress {
-      stroke: url(#gradient);
+    .animate .circle {
+      transform: scale(1.2);
+      opacity: 1;
     }
   </style>
 </head>
 <body>
-  <div class="loader-container">
-    <svg class="progress-ring">
-      <defs>
-        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#4facfe" />
-          <stop offset="100%" stop-color="#00f2fe" />
-        </linearGradient>
-      </defs>
-      <circle
-        stroke="#eee"
-        stroke-width="10"
-        fill="transparent"
-        r="50"
-        cx="60"
-        cy="60"
-      />
-      <circle
-        id="progress"
-        stroke-width="10"
-        fill="transparent"
-        r="50"
-        cx="60"
-        cy="60"
-        stroke-dasharray="314"
-        stroke-dashoffset="314"
-      />
-    </svg>
-    <div class="label" id="percent">0%</div>
+  <div class="container" id="container">
+    <div class="circle" id="circle">
+      <svg class="progress-ring">
+        <circle
+          id="progressCircle"
+          stroke="white"
+          stroke-width="2"
+          fill="transparent"
+          r="138"
+          cx="140"
+          cy="140"
+          stroke-dasharray="866"
+          stroke-dashoffset="866"
+        />
+      </svg>
+    </div>
+    <div class="logo" id="logo">
+      <p style="margin: 0;">NISHIOKA</p>
+      <p style="margin: 0;">TARO</p>
+      <p style="margin: 0;">PORTFOLIO SITE</p>
+    </div>
   </div>
-  <p>
-    「ただいまリンク先にご案内中です」<br />
-    自動で遷移しない場合は  
-    <a href="https://www.notion.so/21b7b882b50580aa86a1c2fa244caa61?source=copy_link">こちら</a> をクリックしてください。
-  </p>
 
   <script>
-    const circle = document.getElementById("progress");
-    const percentLabel = document.getElementById("percent");
-    const total = 314; // 2πr
-    let percent = 0;
-    let offset = total;
+    const circle = document.getElementById("progressCircle");
+    const container = document.getElementById("container");
+    let offset = 866;
+    let progress = 0;
     let step = 0.5;
     const interval = setInterval(() => {
-      percent += step;
-      if (percent >= 100) {
-        percent = 100;
+      progress += step;
+      if (progress >= 100) {
+        progress = 100;
         clearInterval(interval);
+        container.classList.add("animate");
+        setTimeout(() => {
+          container.classList.add("fade-out");
+        }, 1500); // 少し間を置いてフェードアウト開始
       }
-      offset = total - (total * percent) / 100;
+      offset = 866 - (866 * progress) / 100;
       circle.setAttribute("stroke-dashoffset", offset);
-      percentLabel.textContent = Math.round(percent) + "%";
-      if (step < 5) step += 0.1;
+      if (step < 5) step += 0.15; // 加速
     }, 30);
   </script>
 </body>
